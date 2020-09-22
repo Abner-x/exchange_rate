@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">exchange_rate</string>
+    <string name="num">Input RMB</string>
+    <string name="input">Input RMB</string>
+    <string name="inputnum">0</string>
+    <string name="btn_dollar">DOLLAR</string>
+    <string name="btn_EURO">EURO</string>
+    <string name="BTN_WON">WON</string>
+    <string name="config">Config</string>
+    <string name="D">0</string>
+    <string name="E">0</string>
+    <string name="W">0</string>
+    <string name="save">Save</string>
+    <string name="d_rate" />
+    <string name="e_rate" />
+    <string name="w_rate" />
+</resources>
