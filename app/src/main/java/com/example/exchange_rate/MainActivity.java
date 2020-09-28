@@ -1,6 +1,8 @@
 package com.example.exchange_rate;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +38,16 @@ public class MainActivity extends AppCompatActivity {
         d_rate_key = 0.1437f;
         e_rate_key = 0.1256f;
         w_rate_key = 171.3421f;
+    }
+
+    public void save(View view) {
+        SharedPreferences sp = getSharedPreferences("rateData", Activity.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putFloat("d_rate", d_rate_key);
+        editor.putFloat("e_rate", e_rate_key);
+        editor.putFloat("w_rate", w_rate_key);
+        editor.apply();
     }
 
     public void open(View view) {
