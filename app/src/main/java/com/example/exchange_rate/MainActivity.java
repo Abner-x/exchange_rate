@@ -47,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
         editor.putFloat("d_rate", d_rate_key);
         editor.putFloat("e_rate", e_rate_key);
         editor.putFloat("w_rate", w_rate_key);
-        editor.apply();
+    }
+
+    public void show(View view) {
+        Intent main = new Intent(this, MainActivity3.class);
+        startActivityForResult(main,1);
     }
 
     public void open(View view) {

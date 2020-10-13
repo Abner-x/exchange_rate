@@ -15,4 +15,7 @@
     <string name="e_rate" />
     <string name="w_rate" />
     <string name="saverate">SAVE</string>
+    <string name="show">SHOW</string>
+    <string name="ForeignCurrency">ForeignCurrency</string>
+    <string name="rate">rate</string>
 </resources>

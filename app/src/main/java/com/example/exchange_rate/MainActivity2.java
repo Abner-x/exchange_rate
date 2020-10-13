@@ -1,5 +1,6 @@
 package com.example.exchange_rate;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ public class MainActivity2 extends AppCompatActivity implements Runnable {
 
     private static final String TAG = "MainActivity2";
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
