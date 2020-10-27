@@ -2,18 +2,17 @@ package com.example.exchange_rate;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
 import org.jsoup.Jsoup;
@@ -25,53 +24,48 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MainActivity3 extends ListActivity implements Runnable, AdapterView.OnItemClickListener {
+public class MainActivity4 extends AppCompatActivity implements Runnable {
 
     Handler handler;
-
-
-
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main3);
+        setContentView(R.layout.activity_main4);
+
+        GridView grid = findViewById(R.id.list);
+
         handler = new Handler() {
             @SuppressLint("HandlerLeak")
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.what == 5) {
-                    ArrayList<HashMap<String,String>>  l = (ArrayList<HashMap<String, String>>)msg.obj;
-                    SimpleAdapter listAdapter = new SimpleAdapter(MainActivity3.this,l,
-                            R.layout.list_item,new String[]{ "f","r"},new int[]{R.id.ForeignCurrency,R.id.rate} );
-                   setListAdapter(listAdapter);
+
                 }
                 super.handleMessage(msg);
             }
         };
         Thread t = new Thread(this);
         t.start();
-
     }
 
-
+    @Override
     public void run() {
         Message msg = handler.obtainMessage(5);
         ArrayList<HashMap<String, String>> l = new ArrayList<>();
         String url = "https://www.usd-cny.com/bankofchina.htm";
 
         /*
-        * 记录数据
-        * */
+         * 记录数据
+         * */
         SharedPreferences sp = getSharedPreferences("rateData1", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         /*
-        * 记录当前日期是否为首次访问
-        * */
+         * 记录当前日期是否为首次访问
+         * */
         SharedPreferences sp1 = getSharedPreferences("rateData2", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor1 = sp1.edit();
 
@@ -119,15 +113,76 @@ public class MainActivity3 extends ListActivity implements Runnable, AdapterView
         msg.obj = l;
         handler.sendMessage(msg);
     }
+}
+
+class DBHelper extends SQLiteOpenHelper {
+
+    private static final int VERSION = 1;
+    private static final String DB_NAME = "myrate.db";
+    public static final String TB_NAME = "tb_rates";
+
+
+
+    public DBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    public DBHelper(@Nullable Context context) {
+        this(context, DB_NAME,  null,VERSION);
+    }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Object itemAtPosition = getListView().getItemAtPosition(i);
-        HashMap<String,String> map = (HashMap<String, String>) itemAtPosition;
-        String f = map.get("f");
-        String r = map.get("r");
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("CREATE TABLE "+TB_NAME+"(ID INTEGER PRIMARY KEY AUTOINCREMENT,CURNAME TEXT,CURRATE TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
 }
 
+class RateManger{
+    private DBHelper dbHelper;
+    private String tbName;
+
+    public RateManger(Context context) {
+        dbHelper = new DBHelper(context);
+        tbName = DBHelper.TB_NAME;
+    }
+}
+class RateItem {
+    private int id;
+    private String curName;
+    private String curRate;
+
+    public RateItem() {
+        super();
+        curName = "";
+        curRate = "";
+    }
+    public RateItem(String curName, String curRate) {
+        super();
+        this.curName = curName;
+        this.curRate = curRate;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getCurName() {
+        return curName;
+    }
+    public void setCurName(String curName) {
+        this.curName = curName;
+    }
+    public String getCurRate() {
+        return curRate;
+    }
+    public void setCurRate(String curRate) {
+        this.curRate = curRate;
+    }
+}
 
